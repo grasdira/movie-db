@@ -72,71 +72,7 @@ describe('MovieAdapter', () => {
       );
     });
 
-    // 測試 3: 過濾 null poster
-    it('should filter out movies without poster', () => {
-      const mockResponse: TMDBMovieListResponse = {
-        page: 1,
-        results: [
-          {
-            adult: false,
-            backdrop_path: '/abc456.jpg',
-            genre_ids: [16, 12, 10751, 14, 35],
-            id: 123,
-            original_language: 'en',
-            original_title: 'Test Movie 1',
-            overview: 'A Test Movie 1',
-            popularity: 6572.614,
-            poster_path: '/abc123.jpg',
-            release_date: '2023-04-05',
-            title: 'Test Movie 1',
-            video: true,
-            vote_average: 7.5,
-            vote_count: 1456,
-          },
-          {
-            adult: false,
-            backdrop_path: '/abc321.jpg',
-            genre_ids: [16, 14, 35],
-            id: 456,
-            original_language: 'en',
-            original_title: 'Test Movie 2',
-            overview: 'A Test Movie 2',
-            popularity: 2358.9,
-            poster_path: null,
-            release_date: '2024-05-05',
-            title: 'Test Movie 2',
-            video: true,
-            vote_average: 8.5,
-            vote_count: 347,
-          },
-          {
-            adult: false,
-            backdrop_path: '/abc654.jpg',
-            genre_ids: [14, 35],
-            id: 789,
-            original_language: 'en',
-            original_title: 'Test Movie 3',
-            overview: 'A Test Movie 3',
-            popularity: 4236.614,
-            poster_path: '/abc789.jpg',
-            release_date: '2024-10-05',
-            title: 'Test Movie 3',
-            video: true,
-            vote_average: 6.9,
-            vote_count: 1998,
-          },
-        ],
-        total_pages: 1,
-        total_results: 3,
-      };
-
-      const result = MovieAdapter.toSearchResult(mockResponse);
-
-      // 驗證輸出只有 2 部電影
-      expect(result.movies).toHaveLength(2);
-    });
-
-    // 測試 4: 分頁資訊傳遞
+    // 測試 3: 分頁資訊傳遞
     it('should preserve pagination info', () => {
       const mockResponse: TMDBMovieListResponse = {
         page: 5,

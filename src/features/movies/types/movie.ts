@@ -4,12 +4,15 @@
 export interface Movie {
   id: number;
   title: string;
+  originalTitle: string;
   originalLanguage: string;
   overview: string;
-  posterUrl: string;
+  posterUrl: string | null;
+  backdropUrl: string | null;
   releaseDate: string;
   rating: number;
   voteCount: number;
+  genreIds?: number[];
 }
 
 /**

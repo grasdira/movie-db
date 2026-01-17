@@ -9,13 +9,22 @@ const TMDB_IMAGE_BASE_URL = import.meta.env.VITE_TMDB_IMAGE_BASE_URL;
  */
 export class MovieAdapter {
   /**
-   * 將 TMDB 電影列表回應轉換為應用程式格式
-   * 會過濾掉沒有 poster 的電影
+   * 組合完整的圖片 URL
+   * 支援不同尺寸以優化效能
+   */
+  private static getImageUrl(
+    path: string | null,
+    size: string = 'w500'
+  ): string | null {
+    if (!path) return null;
+    return `${TMDB_IMAGE_BASE_URL}/${size}${path}`;
+  }
+
+  /**
+   * 將 TMDB 電影列表回應轉換為應用程式格式，適用於所有列表類 API
    */
   static toSearchResult(response: TMDBMovieListResponse): SearchResult {
-    const movies = response.results
-      .filter((movie) => movie.poster_path !== null)
-      .map((movie) => this.toMovie(movie));
+    const movies = response.results.map((movie) => this.toMovie(movie));
 
     return {
       page: response.page,
@@ -34,11 +43,14 @@ export class MovieAdapter {
       id: movie.id,
       title: movie.title,
       overview: movie.overview,
-      posterUrl: `${TMDB_IMAGE_BASE_URL}${movie.poster_path}`,
+      posterUrl: this.getImageUrl(movie.poster_path, 'w500'),
+      backdropUrl: this.getImageUrl(movie.backdrop_path, 'w1280'),
       originalLanguage: movie.original_language,
       releaseDate: movie.release_date,
       rating: movie.vote_average,
       voteCount: movie.vote_count,
+      originalTitle: movie.original_title,
+      genreIds: movie.genre_ids,
     };
   }
 }
