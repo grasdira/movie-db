@@ -1,3 +1,5 @@
+import type { TMDBMovieListResponse } from './types';
+
 const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
 const BASE_URL = import.meta.env.VITE_TMDB_BASE_URL;
 const language: string = 'en-US';
@@ -81,7 +83,7 @@ export const tmdbClient = {
    * 獲取正在上映的電影
    */
   getNowPlaying: (page: number = 1) =>
-    fetchAPI(`/movie/now_playing`, {
+    fetchAPI<TMDBMovieListResponse>(`/movie/now_playing`, {
       page: String(page),
       language,
     }),
@@ -90,7 +92,7 @@ export const tmdbClient = {
    * 獲取熱門電影
    */
   getPopular: (page: number = 1) =>
-    fetchAPI(`/movie/popular`, {
+    fetchAPI<TMDBMovieListResponse>(`/movie/popular`, {
       page: String(page),
       language,
     }),
@@ -99,7 +101,7 @@ export const tmdbClient = {
    * 獲取高評分電影
    */
   getTopRated: (page: number = 1) =>
-    fetchAPI(`/movie/top_rated`, {
+    fetchAPI<TMDBMovieListResponse>(`/movie/top_rated`, {
       page: String(page),
       language,
     }),
@@ -108,7 +110,7 @@ export const tmdbClient = {
    * 獲取即將上映的電影
    */
   getUpcoming: (page: number = 1) =>
-    fetchAPI(`/movie/upcoming`, {
+    fetchAPI<TMDBMovieListResponse>(`/movie/upcoming`, {
       page: String(page),
       language,
     }),

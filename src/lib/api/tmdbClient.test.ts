@@ -1,14 +1,14 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { tmdbClient, APIError } from './tmdbClient';
 
-// 設定 mock 環境變數
-beforeEach(() => {
-  vi.stubEnv('VITE_TMDB_BASE_URL', 'https://api.themoviedb.org/3');
-
-  vi.clearAllMocks(); // 清理之前的 mock
-});
-
 describe('tmdbClient', () => {
+  // 設定 mock 環境變數
+  beforeEach(() => {
+    vi.stubEnv('VITE_TMDB_BASE_URL', 'https://api.themoviedb.org/3');
+
+    vi.clearAllMocks(); // 清理之前的 mock
+  });
+
   // 用 getNowPlaying 完整測試
   describe('getNowPlaying', () => {
     it('should fetch with correct URL and headers', async () => {
