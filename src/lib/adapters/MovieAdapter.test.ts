@@ -2,12 +2,12 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { MovieAdapter } from './MovieAdapter';
 import type { TMDBMovieListResponse } from '@/lib/api/types';
 
-beforeEach(() => {
-  vi.stubEnv('VITE_TMDB_IMAGE_BASE_URL', 'https://image.tmdb.org/t/p');
-});
-
 describe('MovieAdapter', () => {
-  describe('toMovieList', () => {
+  beforeEach(() => {
+    vi.stubEnv('VITE_TMDB_IMAGE_BASE_URL', 'https://image.tmdb.org/t/p');
+  });
+
+  describe('toSearchResult', () => {
     // 測試 1: 空列表
     it('should return empty array when input is empty', () => {
       // 1. 建立一個 TMDBMovieListResponse 假資料，results 是空陣列
@@ -18,8 +18,8 @@ describe('MovieAdapter', () => {
         total_results: 0,
       };
 
-      // 2. 呼叫 MovieAdapter.toMovieList()
-      const result = MovieAdapter.toMovieList(mockResponse);
+      // 2. 呼叫 MovieAdapter.toSearchResult()
+      const result = MovieAdapter.toSearchResult(mockResponse);
 
       // 3. 驗證回傳的 movies 陣列是空的
       expect(result.movies).toEqual([]);
@@ -54,7 +54,7 @@ describe('MovieAdapter', () => {
         total_results: 1,
       };
 
-      const result = MovieAdapter.toMovieList(mockResponse);
+      const result = MovieAdapter.toSearchResult(mockResponse);
 
       // - movies 陣列長度是 1
       expect(result.movies).toHaveLength(1);
@@ -130,7 +130,7 @@ describe('MovieAdapter', () => {
         total_results: 3,
       };
 
-      const result = MovieAdapter.toMovieList(mockResponse);
+      const result = MovieAdapter.toSearchResult(mockResponse);
 
       // 驗證輸出只有 2 部電影
       expect(result.movies).toHaveLength(2);
@@ -162,7 +162,7 @@ describe('MovieAdapter', () => {
         total_results: 200,
       };
 
-      const result = MovieAdapter.toMovieList(mockResponse);
+      const result = MovieAdapter.toSearchResult(mockResponse);
 
       expect(result.page).toBe(5);
       expect(result.totalPages).toBe(10);

@@ -1,5 +1,5 @@
 import type { TMDBMovie, TMDBMovieListResponse } from '@/lib/api/types';
-import type { Movie, MovieList } from '@/features/movies/types/movie';
+import type { Movie, SearchResult } from '@/features/movies/types/movie';
 
 const TMDB_IMAGE_BASE_URL = import.meta.env.VITE_TMDB_IMAGE_BASE_URL;
 
@@ -12,7 +12,7 @@ export class MovieAdapter {
    * 將 TMDB 電影列表回應轉換為應用程式格式
    * 會過濾掉沒有 poster 的電影
    */
-  static toMovieList(response: TMDBMovieListResponse): MovieList {
+  static toSearchResult(response: TMDBMovieListResponse): SearchResult {
     const movies = response.results
       .filter((movie) => movie.poster_path !== null)
       .map((movie) => this.toMovie(movie));
