@@ -24,3 +24,9 @@ export interface SearchResult {
   totalPages: number;
   totalResults: number;
 }
+
+/**
+ * 電影分類類型
+ * 對應 TMDB API 的不同電影列表端點
+ */
+export type MovieCategory = 'popular' | 'nowPlaying' | 'topRated' | 'upcoming';
