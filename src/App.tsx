@@ -1,12 +1,13 @@
 import '@mantine/core/styles.css';
 
 import { MantineProvider } from '@mantine/core';
-import { HomePage } from '@/pages/Homepage';
+import { RouterProvider } from 'react-router';
+import { router } from './router';
 
 function App() {
   return (
     <MantineProvider defaultColorScheme="auto">
-      <HomePage />
+      <RouterProvider router={router} />
     </MantineProvider>
   );
 }

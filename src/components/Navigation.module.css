@@ -1,0 +1,56 @@
+/* Navigation 的樣式定義 */
+
+/* Logo 連結 */
+.logoLink {
+  text-decoration: none;
+  color: inherit;
+  transition: opacity 0.2s ease;
+}
+
+.logoLink:hover {
+  opacity: 0.8;
+}
+
+.logo {
+  user-select: none;
+  font-weight: 700;
+  color: light-dark(var(--mantine-color-dark-9), var(--mantine-color-gray-0));
+}
+
+/* 導航連結 */
+.navLink {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  color: light-dark(var(--mantine-color-gray-7), var(--mantine-color-gray-4));
+}
+
+.navLink:hover {
+  background-color: light-dark(
+    var(--mantine-color-gray-1),
+    var(--mantine-color-dark-6)
+  );
+  color: light-dark(var(--mantine-color-dark-9), var(--mantine-color-gray-0));
+}
+
+/* 當前啟用的導航連結 */
+.navLink.active {
+  background-color: light-dark(
+    var(--mantine-color-blue-0),
+    var(--mantine-color-blue-9)
+  );
+  color: light-dark(var(--mantine-color-blue-7), var(--mantine-color-blue-2));
+  font-weight: 600;
+}
+
+.navLink.active:hover {
+  background-color: light-dark(
+    var(--mantine-color-blue-1),
+    var(--mantine-color-blue-8)
+  );
+}

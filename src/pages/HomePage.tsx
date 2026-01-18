@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Container, Title, Stack } from '@mantine/core';
+import { useNavigate } from 'react-router';
 import { MovieSection } from '@/features/movies/components/MovieSection';
 import { MovieDetailModal } from '@/features/movies/components/MovieDetailModal';
 import type { Movie } from '@/features/movies/types/movie';
@@ -15,6 +16,7 @@ import type { Movie } from '@/features/movies/types/movie';
  * - 當使用者點擊電影卡片時,會開啟 Modal 顯示電影基本資訊
  */
 export function HomePage() {
+  const navigate = useNavigate();
   // 管理 Modal 的開啟/關閉狀態和選中的電影
   const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null);
 
@@ -36,11 +38,11 @@ export function HomePage() {
 
   /**
    * 前往電影詳細頁面
+   *
+   * 使用 React Router 的 navigate 導航到 /movie/:id 頁面
    */
   const handleViewDetail = (movieId: number) => {
-    console.log('Navigate to movie detail page:', movieId);
-    // TODO: 實作路由導航 /movie/:id
-    // navigate(`/movie/${movieId}`);
+    navigate(`/movie/${movieId}`);
   };
 
   return (
