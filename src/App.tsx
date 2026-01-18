@@ -1,9 +1,14 @@
 import '@mantine/core/styles.css';
 
 import { MantineProvider } from '@mantine/core';
+import { HomePage } from '@/pages/Homepage';
 
 function App() {
-  return <MantineProvider>{/* App Here */}</MantineProvider>;
+  return (
+    <MantineProvider defaultColorScheme="auto">
+      <HomePage />
+    </MantineProvider>
+  );
 }
 
 export default App;
