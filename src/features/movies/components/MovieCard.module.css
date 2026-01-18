@@ -1,0 +1,34 @@
+/* MovieCard 的樣式定義 */
+
+.card {
+  /* 固定卡片寬度,確保在橫向捲軸中保持一致 */
+  width: 200px;
+  /* 防止卡片被壓縮 */
+  flex-shrink: 0;
+  /* 滑鼠移過時提供視覺回饋 */
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+  /* 移除多餘的 padding,確保高度統一 */
+  overflow: hidden;
+}
+
+.card:hover {
+  /* 輕微上移效果 */
+  transform: translateY(-4px);
+  /* 增強陰影效果 - Light/Dark mode 分別處理 */
+  box-shadow: light-dark(
+    0 8px 16px rgba(0, 0, 0, 0.15),
+    0 8px 20px rgba(0, 0, 0, 0.4)
+  );
+}
+
+.poster {
+  /* 確保海報圖片填滿卡片 */
+  width: 100%;
+  /* 固定高度,確保所有卡片統一 - 手機版本 */
+  height: 300px;
+  /* 保持圖片比例,裁切超出部分 */
+  object-fit: cover;
+  display: block;
+}

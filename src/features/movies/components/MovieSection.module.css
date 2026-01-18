@@ -1,0 +1,15 @@
+/* MovieSection 的樣式定義 */
+
+.section {
+  /* 區塊之間的間距 */
+  margin-bottom: 48px;
+}
+
+.centerContent {
+  /* 將載入指示器和錯誤訊息置中顯示 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* 提供適當的垂直空間 */
+  min-height: 200px;
+}

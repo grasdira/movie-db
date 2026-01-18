@@ -1,0 +1,41 @@
+/* MovieGrid 的樣式定義 */
+
+.container {
+  /* 確保容器有足夠的空間 */
+  width: 100%;
+  /* 防止內容溢出 */
+  overflow: hidden;
+}
+
+.scrollContainer {
+  /* 啟用橫向捲軸 */
+  overflow-x: auto;
+  /* 隱藏捲軸,提供更乾淨的視覺效果 */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE/Edge */
+  /* 在觸控裝置上提供更好的滑動體驗 */
+  -webkit-overflow-scrolling: touch;
+  /* 添加內邊距,在手機上使用較小的間距 */
+  padding: 12px 0;
+}
+
+/* 隱藏 Chrome/Safari 的捲軸 */
+.scrollContainer::-webkit-scrollbar {
+  display: none;
+}
+
+/* 平板版本 (768px 以上) */
+@media (min-width: 768px) {
+  .scrollContainer {
+    /* 在平板上增加垂直內邊距 */
+    padding: 16px 0;
+  }
+}
+
+/* 桌面版本 (1024px 以上) */
+@media (min-width: 1024px) {
+  .scrollContainer {
+    /* 在桌面上使用更大的內邊距 */
+    padding: 20px 0;
+  }
+}
