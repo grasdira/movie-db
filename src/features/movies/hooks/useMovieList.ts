@@ -14,19 +14,23 @@ interface UseMovieListReturn {
 /**
  * 載入指定分類的電影列表
  *
- * 這個 hook 專門處理電影列表的初始載入,只取得第一頁資料。
- * 適用於首頁的電影分類預覽,不支援分頁載入。
+ * 這個 hook 專門用於首頁的電影分類展示,只取得第一頁資料。
+ * 會自動過濾掉沒有海報的電影,確保視覺呈現的完整性。
+ *
+ * 設計決策:
+ * - 永遠過濾掉沒有海報的電影,因為這個 hook 的目的就是首頁展示
+ * - 如果需要顯示所有電影(例如搜尋結果),應該使用其他專門的 hook
  *
  * @param category - 電影分類類型
  * @returns 包含電影資料、載入狀態和錯誤狀態的物件
  *
  * @example
  * ```tsx
- * function PopularMovies() {
+ * function PopularMoviesSection() {
  *   const { movies, loading, error } = useMovieList('popular');
  *
- *   if (loading) return <div>Loading...</div>;
- *   if (error) return <div>Error: {error.message}</div>;
+ *   if (loading) return <Loader />;
+ *   if (error) return <ErrorMessage error={error} />;
  *
  *   return <MovieGrid movies={movies} />;
  * }
@@ -45,6 +49,7 @@ export function useMovieList(category: MovieCategory): UseMovieListReturn {
      * 1. 使用 async function 包裝,避免直接在 useEffect 中使用 async
      * 2. 在開始載入前重置 error 狀態,確保不會顯示舊的錯誤訊息
      * 3. 使用 finally 確保無論成功或失敗都會設定 loading 為 false
+     * 4. 永遠過濾掉沒有海報的電影,因為這是首頁展示的核心需求
      */
     async function fetchMovies() {
       setLoading(true);
@@ -52,7 +57,6 @@ export function useMovieList(category: MovieCategory): UseMovieListReturn {
 
       try {
         // 根據 category 呼叫對應的 Repository method
-        // 使用 switch 而非物件映射,因為每個 method 的型別都是明確的
         let result;
         switch (category) {
           case 'popular':
@@ -69,7 +73,12 @@ export function useMovieList(category: MovieCategory): UseMovieListReturn {
             break;
         }
 
-        setMovies(result.movies);
+        // 過濾掉沒有海報的電影,確保首頁視覺呈現的完整性
+        const moviesWithPoster = result.movies.filter(
+          (movie) => movie.posterUrl !== null
+        );
+
+        setMovies(moviesWithPoster);
       } catch (err) {
         // 確保 error 永遠是 Error 物件,方便 UI 層使用
         setError(err instanceof Error ? err : new Error('Unknown error'));
