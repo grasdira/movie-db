@@ -1,0 +1,14 @@
+/* MovieDetailPage 的樣式定義 */
+
+.page {
+  /* 移除 AppShell 的預設 padding,讓背景橫幅可以延伸到整個寬度 */
+  margin: calc(var(--mantine-spacing-md) * -1);
+  margin-top: 0;
+}
+
+.centerContent {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;
+}

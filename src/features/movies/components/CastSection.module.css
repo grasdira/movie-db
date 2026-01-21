@@ -1,0 +1,31 @@
+/* CastSection 的樣式定義 */
+
+.section {
+  width: 100%;
+}
+
+.scrollContainer {
+  overflow-x: auto;
+  overflow-y: hidden;
+  /* 隱藏捲軸 */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  -webkit-overflow-scrolling: touch;
+  padding: 8px 0;
+}
+
+.scrollContainer::-webkit-scrollbar {
+  display: none;
+}
+
+.castCard {
+  flex-shrink: 0;
+  width: 140px;
+  text-align: center;
+}
+
+.avatar {
+  /* Light mode: 淺色邊框 / Dark mode: 深色邊框 */
+  border: 2px solid
+    light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-5));
+}

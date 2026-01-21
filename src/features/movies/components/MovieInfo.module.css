@@ -1,0 +1,9 @@
+/* MovieInfo 的樣式定義 */
+
+.paper {
+  /* Light mode: 白色背景 / Dark mode: 深色背景 */
+  background-color: light-dark(
+    var(--mantine-color-white),
+    var(--mantine-color-dark-7)
+  );
+}

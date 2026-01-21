@@ -1,0 +1,164 @@
+/* MovieHero 的樣式定義 */
+
+.hero {
+  position: relative;
+  width: 100%;
+  /* 手機版本:較小的高度 */
+  min-height: 500px;
+  overflow: hidden;
+}
+
+/* 背景圖片 */
+.backdrop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 0;
+}
+
+.backdropImage {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-size: cover;
+  background-position: center;
+  /* Light mode: 較低透明度 / Dark mode: 較高透明度 */
+  opacity: light-dark(0.3, 0.25);
+  filter: blur(8px);
+  transform: scale(1.1);
+}
+
+.backdropOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  /* Light mode: 漸變到白色 / Dark mode: 漸變到深色 */
+  background: light-dark(
+    linear-gradient(
+      to bottom,
+      rgba(255, 255, 255, 0.7) 0%,
+      rgba(255, 255, 255, 0.95) 100%
+    ),
+    linear-gradient(
+      to bottom,
+      rgba(26, 27, 30, 0.7) 0%,
+      rgba(26, 27, 30, 0.95) 100%
+    )
+  );
+}
+
+/* 內容區域 */
+.content {
+  position: relative;
+  z-index: 1;
+  padding-top: 40px;
+  padding-bottom: 40px;
+}
+
+.heroContent {
+  display: flex;
+  gap: 32px;
+  align-items: flex-start;
+  /* 手機版本:垂直排列 */
+  flex-direction: column;
+}
+
+/* 海報 */
+.posterWrapper {
+  flex-shrink: 0;
+  /* 手機版本:置中顯示 */
+  align-self: center;
+  width: 200px;
+  border-radius: 12px;
+  overflow: hidden;
+  /* Light mode: 較淺陰影 / Dark mode: 較深陰影 */
+  box-shadow: light-dark(
+    0 8px 32px rgba(0, 0, 0, 0.2),
+    0 8px 40px rgba(0, 0, 0, 0.6)
+  );
+}
+
+.poster {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* 資訊區域 */
+.info {
+  flex: 1;
+  min-width: 0;
+}
+
+.title {
+  font-size: 2rem;
+  line-height: 1.2;
+  margin-bottom: 0;
+  /* Light mode: 深色文字 / Dark mode: 淺色文字 */
+  color: light-dark(var(--mantine-color-dark-9), var(--mantine-color-gray-0));
+}
+
+.ratingBadge {
+  color: var(--mantine-color-dark-9);
+  background-color: var(--mantine-color-yellow-4);
+}
+
+.tagline {
+  /* Light mode: 深灰文字 / Dark mode: 淺灰文字 */
+  color: light-dark(var(--mantine-color-gray-7), var(--mantine-color-gray-4));
+  opacity: 0.9;
+}
+
+.overview {
+  line-height: 1.7;
+  /* Light mode: 深灰文字 / Dark mode: 淺灰文字 */
+  color: light-dark(var(--mantine-color-gray-8), var(--mantine-color-gray-3));
+}
+
+/* 平板版本 (768px 以上) */
+@media (min-width: 768px) {
+  .hero {
+    min-height: 600px;
+  }
+
+  .heroContent {
+    /* 平板以上:水平排列 */
+    flex-direction: row;
+  }
+
+  .posterWrapper {
+    /* 取消置中 */
+    align-self: flex-start;
+    width: 300px;
+  }
+
+  .title {
+    font-size: 2.5rem;
+  }
+}
+
+/* 桌面版本 (1024px 以上) */
+@media (min-width: 1024px) {
+  .hero {
+    min-height: 700px;
+  }
+
+  .content {
+    padding-top: 60px;
+    padding-bottom: 60px;
+  }
+
+  .posterWrapper {
+    width: 350px;
+  }
+
+  .title {
+    font-size: 3rem;
+  }
+}

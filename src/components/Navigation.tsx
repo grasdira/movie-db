@@ -67,9 +67,9 @@ export function Navigation({ children }: NavigationProps) {
   };
 
   return (
-    <AppShell header={{ height: 60 }} padding="md">
+    <AppShell header={{ height: 60 }}>
       {/* Header */}
-      <AppShell.Header>
+      <AppShell.Header p="sm">
         <Group h="100%" px="md" justify="space-between">
           {/* Logo & Title */}
           <Group gap="sm">
