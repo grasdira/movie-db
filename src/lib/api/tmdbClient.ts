@@ -1,4 +1,4 @@
-import type { TMDBMovieListResponse } from './types';
+import type { TMDBMovieListResponse, TMDBMovieDetailFull } from './types';
 
 const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
 const BASE_URL = import.meta.env.VITE_TMDB_BASE_URL;
@@ -113,5 +113,23 @@ export const tmdbClient = {
     fetchAPI<TMDBMovieListResponse>(`/movie/upcoming`, {
       page: String(page),
       language,
+    }),
+
+  /**
+   * 獲取電影詳細資訊
+   *
+   * 使用 append_to_response 參數一次性獲取:
+   * - 電影基本資訊
+   * - 演員和劇組資訊 (credits)
+   * - 預告片和影片 (videos)
+   * - 評論 (reviews)
+   *
+   * @param movieId - 電影 ID
+   * @returns 完整的電影詳細資訊
+   */
+  getMovieDetail: (movieId: number) =>
+    fetchAPI<TMDBMovieDetailFull>(`/movie/${movieId}`, {
+      language,
+      append_to_response: 'credits,videos,reviews',
     }),
 };

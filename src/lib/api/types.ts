@@ -173,7 +173,7 @@ export interface TMDBReviews {
  * https://developer.themoviedb.org/reference/movie-details
  */
 export interface TMDBMovieDetailFull extends TMDBMovieDetail {
-  credits?: TMDBCredits;
-  videos?: TMDBVideos;
-  reviews?: TMDBReviews;
+  credits: TMDBCredits;
+  videos: TMDBVideos;
+  reviews: TMDBReviews;
 }

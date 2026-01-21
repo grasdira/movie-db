@@ -1,7 +1,11 @@
 import { tmdbClient } from '@/lib/api/tmdbClient';
 import { MovieAdapter } from '@/lib/adapters/MovieAdapter';
-import type { TMDBMovieListResponse } from '@/lib/api/types';
-import type { SearchResult } from '@/features/movies/types/movie';
+import { MovieDetailAdapter } from '@/lib/adapters/MovieDetailAdapter';
+import type {
+  TMDBMovieListResponse,
+  TMDBMovieDetailFull,
+} from '@/lib/api/types';
+import type { SearchResult, MovieDetail } from '@/features/movies/types/movie';
 
 export class MovieRepository {
   static async getPopular(page: number = 1): Promise<SearchResult> {
@@ -22,5 +26,16 @@ export class MovieRepository {
   static async getUpcoming(page: number = 1): Promise<SearchResult> {
     const response = await tmdbClient.getUpcoming(page);
     return MovieAdapter.toSearchResult(response as TMDBMovieListResponse);
+  }
+
+  /**
+   * 獲取電影詳細資訊
+   *
+   * @param movieId - 電影 ID
+   * @returns 完整的電影詳細資訊,包含演員、劇組、影片和評論
+   */
+  static async getMovieDetail(movieId: number): Promise<MovieDetail> {
+    const response = await tmdbClient.getMovieDetail(movieId);
+    return MovieDetailAdapter.toMovieDetail(response as TMDBMovieDetailFull);
   }
 }
