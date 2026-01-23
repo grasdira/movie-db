@@ -1,6 +1,7 @@
 import { createBrowserRouter } from 'react-router';
 import { HomePage } from '@/pages/HomePage';
 import { MovieDetailPage } from '@/pages/MovieDetailPage';
+import { WatchlistPage } from '@/pages/WatchlistPage';
 import { Navigation } from '@/components/Navigation';
 
 /**
@@ -13,7 +14,7 @@ import { Navigation } from '@/components/Navigation';
  * - / : 首頁,顯示各分類的電影列表
  * - /movie/:id : 電影詳細頁面
  * - /search : 搜尋頁面 (待實作)
- * - /watchlist : 待看清單頁面 (待實作)
+ * - /watchlist : 待看清單頁面
  */
 export const router = createBrowserRouter([
   {
@@ -45,8 +46,7 @@ export const router = createBrowserRouter([
     path: '/watchlist',
     element: (
       <Navigation>
-        {/* TODO: WatchlistPage */}
-        <div>Watchlist Page - Coming Soon</div>
+        <WatchlistPage />
       </Navigation>
     ),
   },
