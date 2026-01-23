@@ -15,8 +15,14 @@ import {
   IconCalendar,
   IconWorld,
   IconBookmark,
+  IconBookmarkFilled,
   IconStarFilled,
 } from '@tabler/icons-react';
+import { notifications } from '@mantine/notifications';
+import {
+  useIsInWatchlist,
+  useWatchlistActions,
+} from '@/features/watchlist/store';
 import type { Movie } from '@/features/movies/types/movie';
 import styles from './MovieDetailModal.module.css';
 
@@ -33,6 +39,9 @@ interface MovieDetailModalProps {
  * 當使用者點擊電影卡片時顯示的彈出視窗
  * 顯示電影的基本資訊,並提供前往詳細頁面的按鈕與新增至待看清單按鈕
  *
+ * 使用 Zustand 管理 watchlist 狀態:
+ * - useIsInWatchlist: 只訂閱該電影的狀態
+ * - useWatchlistActions: 取得操作方法
  */
 export function MovieDetailModal({
   movie,
@@ -40,6 +49,10 @@ export function MovieDetailModal({
   onClose,
   onViewDetail,
 }: MovieDetailModalProps) {
+  // 使用 Zustand selector hooks
+  const isInWatchlist = useIsInWatchlist(movie?.id ?? 0);
+  const { toggleWatchlist } = useWatchlistActions();
+
   if (!movie) return null;
 
   const formattedRating = movie.rating.toFixed(1);
@@ -50,6 +63,29 @@ export function MovieDetailModal({
       onViewDetail(movie.id);
     }
     onClose();
+  };
+
+  /**
+   * 處理 Watchlist 按鈕點擊
+   */
+  const handleToggleWatchlist = () => {
+    const added = toggleWatchlist(movie.id);
+
+    // 顯示 Toast notification
+    if (added) {
+      notifications.show({
+        title: 'Added to Watchlist',
+        message: `${movie.title} has been added to your watchlist`,
+        color: 'blue',
+        icon: <IconBookmarkFilled size={18} />,
+      });
+    } else {
+      notifications.show({
+        title: 'Removed from Watchlist',
+        message: `${movie.title} has been removed from your watchlist`,
+        color: 'gray',
+      });
+    }
   };
 
   return (
@@ -65,7 +101,6 @@ export function MovieDetailModal({
         content: styles.modalContent,
       }}
       withCloseButton={false}
-      // scrollAreaComponent={ScrollArea.Autosize}
     >
       {/* 背景海報(模糊效果) */}
       <div className={styles.backdrop}>
@@ -78,15 +113,20 @@ export function MovieDetailModal({
         <div className={styles.backdropOverlay} />
       </div>
 
-      {/* //TODO 行動按鈕 - Add to watchlist */}
+      {/* 行動按鈕 - Watchlist */}
       <div className={styles.actionWrapper}>
-        <Tooltip label="Add to watchlist">
+        <Tooltip
+          label={isInWatchlist ? 'Remove from watchlist' : 'Add to watchlist'}
+        >
           <ActionIcon
             variant="transparent"
-            aria-label="Add to watchlist"
+            aria-label={
+              isInWatchlist ? 'Remove from watchlist' : 'Add to watchlist'
+            }
             size="xl"
+            onClick={handleToggleWatchlist}
           >
-            <IconBookmark></IconBookmark>
+            {isInWatchlist ? <IconBookmarkFilled /> : <IconBookmark />}
           </ActionIcon>
         </Tooltip>
       </div>

@@ -178,3 +178,15 @@ export const useWatchlistActions = () => {
     isInWatchlist,
   };
 };
+
+/**
+ * 檢查特定電影是否在 watchlist 中
+ *
+ * 注意: 這個 hook 使用了穩定的 selector
+ */
+export const useIsInWatchlist = (movieId: number) => {
+  return useWatchlistStore((state) => {
+    // 直接在 selector 中檢查,避免呼叫 isInWatchlist 方法
+    return state.items.some((item) => item.movieId === movieId);
+  });
+};

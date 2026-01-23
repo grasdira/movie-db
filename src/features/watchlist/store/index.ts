@@ -6,4 +6,5 @@ export {
   useWatchlistItems,
   useWatchlistCount,
   useWatchlistActions,
+  useIsInWatchlist,
 } from './useWatchlistStore';
