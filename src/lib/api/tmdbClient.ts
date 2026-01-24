@@ -132,4 +132,21 @@ export const tmdbClient = {
       language,
       append_to_response: 'credits,videos,reviews',
     }),
+
+  /**
+   * 搜尋電影
+   *
+   * 使用 search/movie API 進行關鍵字搜尋
+   *
+   * @param query - 搜尋關鍵字
+   * @param page - 頁碼 (預設為 1)
+   * @returns 搜尋結果,包含電影列表和分頁資訊
+   */
+  searchMovies: (query: string, page: number = 1) =>
+    fetchAPI<TMDBMovieListResponse>(`/search/movie`, {
+      query: encodeURIComponent(query),
+      page: String(page),
+      language,
+      include_adult: 'false',
+    }),
 };

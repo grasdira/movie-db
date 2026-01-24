@@ -38,4 +38,32 @@ export class MovieRepository {
     const response = await tmdbClient.getMovieDetail(movieId);
     return MovieDetailAdapter.toMovieDetail(response as TMDBMovieDetailFull);
   }
+
+  /**
+   * 搜尋電影
+   *
+   * 根據關鍵字搜尋電影,支援分頁載入
+   *
+   * @param query - 搜尋關鍵字
+   * @param page - 頁碼 (預設為 1)
+   * @returns 搜尋結果,包含電影列表和分頁資訊
+   */
+  static async searchMovies(
+    query: string,
+    page: number = 1
+  ): Promise<SearchResult> {
+    // 如果搜尋關鍵字為空,回傳空結果
+    // 這避免了不必要的 API 呼叫
+    if (!query || query.trim() === '') {
+      return {
+        page: 1,
+        movies: [],
+        totalPages: 0,
+        totalResults: 0,
+      };
+    }
+
+    const response = await tmdbClient.searchMovies(query.trim(), page);
+    return MovieAdapter.toSearchResult(response as TMDBMovieListResponse);
+  }
 }

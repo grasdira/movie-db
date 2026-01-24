@@ -1,0 +1,21 @@
+/* SearchPage 的樣式定義 */
+
+.centerContent {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;
+  padding: 40px 20px;
+}
+
+.emptyIcon {
+  color: light-dark(var(--mantine-color-gray-4), var(--mantine-color-dark-3));
+  opacity: 0.5;
+}
+
+.loadingMore {
+  min-height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

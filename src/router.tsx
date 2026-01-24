@@ -3,6 +3,7 @@ import { HomePage } from '@/pages/HomePage';
 import { MovieDetailPage } from '@/pages/MovieDetailPage';
 import { WatchlistPage } from '@/pages/WatchlistPage';
 import { Navigation } from '@/components/Navigation';
+import { SearchPage } from '@/pages/SearchPage';
 
 /**
  * 應用程式的路由配置
@@ -13,7 +14,7 @@ import { Navigation } from '@/components/Navigation';
  * 路由結構:
  * - / : 首頁,顯示各分類的電影列表
  * - /movie/:id : 電影詳細頁面
- * - /search : 搜尋頁面 (待實作)
+ * - /search : 搜尋頁面
  * - /watchlist : 待看清單頁面
  */
 export const router = createBrowserRouter([
@@ -37,8 +38,7 @@ export const router = createBrowserRouter([
     path: '/search',
     element: (
       <Navigation>
-        {/* TODO: SearchPage */}
-        <div>Search Page - Coming Soon</div>
+        <SearchPage />
       </Navigation>
     ),
   },
