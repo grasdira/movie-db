@@ -36,7 +36,6 @@ export class MovieAdapter {
 
   /**
    * 將單一 TMDB 電影資料轉換為應用程式格式
-   * 注意：這個方法假設 poster_path 不為 null
    */
   private static toMovie(movie: TMDBMovie): Movie {
     return {
@@ -51,6 +50,7 @@ export class MovieAdapter {
       voteCount: movie.vote_count,
       originalTitle: movie.original_title,
       genreIds: movie.genre_ids,
+      popularity: movie.popularity,
     };
   }
 }

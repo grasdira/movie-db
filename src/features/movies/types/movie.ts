@@ -13,6 +13,7 @@ export interface Movie {
   rating: number;
   voteCount: number;
   genreIds?: number[];
+  popularity: number;
 }
 
 /**
@@ -91,19 +92,8 @@ export interface Review {
  * 完整的電影詳細資訊
  * 包含基本資訊、演員陣容、影片和評論
  */
-export interface MovieDetail {
-  // 基本資訊
-  id: number;
-  title: string;
-  originalTitle: string;
-  originalLanguage: string;
-  overview: string;
+export interface MovieDetail extends Omit<Movie, 'genreIds'> {
   tagline: string | null;
-  posterUrl: string | null;
-  backdropUrl: string | null;
-  releaseDate: string;
-  rating: number;
-  voteCount: number;
   runtime: number | null; // 片長(分鐘)
   budget: number;
   revenue: number;

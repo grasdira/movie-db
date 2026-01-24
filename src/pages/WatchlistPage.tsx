@@ -97,6 +97,7 @@ export function WatchlistPage() {
           releaseDate: detail.releaseDate,
           rating: detail.rating,
           voteCount: detail.voteCount,
+          popularity: detail.popularity || 0, // 加入這一行
         }));
 
         setMovies(basicMovies);

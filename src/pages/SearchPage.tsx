@@ -28,25 +28,17 @@ import styles from './SearchPage.module.css';
 
 /**
  * 排序選項的型別定義
+ *
+ * 選項說明:
+ * - popularity: 按熱門程度排序(預設)
+ * - rating: 按評分排序
+ * - date: 按上映日期排序
+ * - title: 按標題字母順序排序
  */
-type SortOption = 'relevance' | 'rating' | 'date' | 'title';
+type SortOption = 'popularity' | 'rating' | 'date' | 'title';
 
 /**
  * SearchPage 元件
- *
- * 電影搜尋頁面,提供以下功能:
- * 1. 搜尋輸入框 with debounce
- * 2. 即時搜尋結果顯示
- * 3. 無限滾動載入更多結果
- * 4. 前端排序功能
- * 5. 空狀態和錯誤處理
- *
- * 使用者體驗設計:
- * - 輸入時有 300ms debounce,避免過多請求
- * - 顯示搜尋結果數量
- * - 支援清除搜尋
- * - 滾動到底部自動載入更多
- * - 響應式設計適配各種螢幕
  */
 export function SearchPage() {
   const navigate = useNavigate();
@@ -65,7 +57,7 @@ export function SearchPage() {
 
   // UI 狀態
   const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null);
-  const [sortBy, setSortBy] = useState<SortOption>('relevance');
+  const [sortBy, setSortBy] = useState<SortOption>('popularity');
 
   /**
    * 設定無限滾動的觀察目標
@@ -97,19 +89,8 @@ export function SearchPage() {
    *
    * 使用 useMemo 來快取排序結果,避免每次 render 都重新排序
    * 只有當 movies 或 sortBy 改變時才重新排序
-   *
-   * 排序選項:
-   * 1. relevance: API 預設的相關度排序
-   * 2. rating: 按評分從高到低
-   * 3. date: 按上映日期從新到舊
-   * 4. title: 按標題字母順序
    */
   const sortedMovies = useMemo(() => {
-    if (sortBy === 'relevance') {
-      // 相關度排序就是 API 回傳的順序,不需要處理
-      return movies;
-    }
-
     // 建立副本進行排序,避免修改原始陣列
     const sorted = [...movies];
 
@@ -134,7 +115,8 @@ export function SearchPage() {
         );
 
       default:
-        return sorted;
+        // 預設按熱門程度降序排序
+        return sorted.sort((a, b) => b.popularity - a.popularity);
     }
   }, [movies, sortBy]);
 
@@ -143,9 +125,9 @@ export function SearchPage() {
    */
   const handleSearch = (value: string) => {
     setQuery(value);
-    // 當使用者開始新的搜尋時,重置排序為相關度
+    // 當使用者開始新的搜尋時,重置排序為熱門程度
     if (value.trim() !== query.trim()) {
-      setSortBy('relevance');
+      setSortBy('popularity');
     }
   };
 
@@ -154,7 +136,7 @@ export function SearchPage() {
    */
   const handleClearSearch = () => {
     setQuery('');
-    setSortBy('relevance');
+    setSortBy('popularity');
   };
 
   /**
@@ -241,7 +223,7 @@ export function SearchPage() {
                   value={sortBy}
                   onChange={(value) => setSortBy(value as SortOption)}
                   data={[
-                    { value: 'relevance', label: 'Relevance' },
+                    { value: 'popularity', label: 'Most Popular' },
                     { value: 'rating', label: 'Highest Rated' },
                     { value: 'date', label: 'Release Date' },
                     { value: 'title', label: 'Title (A-Z)' },
