@@ -1,8 +1,6 @@
 import {
   Container,
-  Title,
   TextInput,
-  SimpleGrid,
   Loader,
   Alert,
   Stack,
@@ -10,6 +8,7 @@ import {
   Select,
   Group,
   ActionIcon,
+  Title,
 } from '@mantine/core';
 import {
   IconSearch,
@@ -18,12 +17,9 @@ import {
   IconMoodSad,
 } from '@tabler/icons-react';
 import { useState, useMemo } from 'react';
-import { useNavigate } from 'react-router';
 import { useIntersection } from '@mantine/hooks';
 import { useMovieSearch } from '@/features/movies/hooks/useMovieSearch';
-import { MovieCard } from '@/features/movies/components/MovieCard';
-import { MovieDetailModal } from '@/features/movies/components/MovieDetailModal';
-import type { Movie } from '@/features/movies/types/movie';
+import { MovieListItem } from '@/features/movies/components/MovieListItem';
 import styles from './SearchPage.module.css';
 
 /**
@@ -41,8 +37,6 @@ type SortOption = 'popularity' | 'rating' | 'date' | 'title';
  * SearchPage 元件
  */
 export function SearchPage() {
-  const navigate = useNavigate();
-
   // 使用搜尋 hook
   const {
     movies,
@@ -55,8 +49,7 @@ export function SearchPage() {
     query,
   } = useMovieSearch();
 
-  // UI 狀態
-  const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null);
+  // 排序狀態
   const [sortBy, setSortBy] = useState<SortOption>('popularity');
 
   /**
@@ -140,27 +133,6 @@ export function SearchPage() {
   };
 
   /**
-   * 處理電影卡片點擊
-   */
-  const handleMovieClick = (movie: Movie) => {
-    setSelectedMovie(movie);
-  };
-
-  /**
-   * 關閉 Modal
-   */
-  const handleCloseModal = () => {
-    setSelectedMovie(null);
-  };
-
-  /**
-   * 前往電影詳細頁面
-   */
-  const handleViewDetail = (movieId: number) => {
-    navigate(`/movie/${movieId}`);
-  };
-
-  /**
    * 判斷是否應該顯示空狀態
    *
    * 空狀態的情況:
@@ -180,156 +152,140 @@ export function SearchPage() {
   const showInitialState = query.trim() === '' && !loading;
 
   return (
-    <>
-      <Container size="xl" py={{ base: 'md', sm: 'xl' }}>
-        <Stack gap="xl">
-          {/* 頁面標題和搜尋框 */}
-          <Stack gap="md">
-            <Title order={1} size="h3">
-              Search Movies
-            </Title>
+    <Container size="lg" py={{ base: 'md', sm: 'xl' }}>
+      <Stack gap="xl">
+        {/* 頁面標題和搜尋框 */}
+        <Stack gap="md">
+          <Title order={1} size="h3">
+            Search Movies
+          </Title>
 
-            {/* 搜尋輸入框 */}
-            <TextInput
-              placeholder="Search for movies..."
-              size="lg"
-              leftSection={<IconSearch size={20} />}
-              rightSection={
-                query && (
-                  <ActionIcon
-                    variant="subtle"
-                    onClick={handleClearSearch}
-                    aria-label="Clear search"
-                  >
-                    <IconX size={20} />
-                  </ActionIcon>
-                )
-              }
-              value={query}
-              onChange={(e) => handleSearch(e.target.value)}
-            />
+          {/* 搜尋輸入框 */}
+          <TextInput
+            placeholder="Search for movies..."
+            size="lg"
+            leftSection={<IconSearch size={20} />}
+            rightSection={
+              query && (
+                <ActionIcon
+                  variant="subtle"
+                  onClick={handleClearSearch}
+                  aria-label="Clear search"
+                >
+                  <IconX size={20} />
+                </ActionIcon>
+              )
+            }
+            value={query}
+            onChange={(e) => handleSearch(e.target.value)}
+          />
 
-            {/* 搜尋結果資訊和排序選項 */}
-            {movies.length > 0 && (
-              <Group justify="space-between" align="center">
-                <Text c="dimmed">
-                  Found {totalResults.toLocaleString()} result
-                  {totalResults !== 1 ? 's' : ''}
-                  {query && ` for "${query}"`}
-                </Text>
+          {/* 搜尋結果資訊和排序選項 */}
+          {movies.length > 0 && (
+            <Group justify="space-between" align="center">
+              <Text c="dimmed">
+                Found {totalResults.toLocaleString()} result
+                {totalResults !== 1 ? 's' : ''}
+                {query && ` for "${query}"`}
+              </Text>
 
-                {/* 排序選項 */}
-                <Select
-                  value={sortBy}
-                  onChange={(value) => setSortBy(value as SortOption)}
-                  data={[
-                    { value: 'popularity', label: 'Most Popular' },
-                    { value: 'rating', label: 'Highest Rated' },
-                    { value: 'date', label: 'Release Date' },
-                    { value: 'title', label: 'Title (A-Z)' },
-                  ]}
-                  size="sm"
-                  w={{ base: '100%', xs: 200 }}
-                  label="Sort by"
-                />
-              </Group>
-            )}
-          </Stack>
-
-          {/* 初始狀態:提示使用者開始搜尋 */}
-          {showInitialState && (
-            <div className={styles.centerContent}>
-              <Stack align="center" gap="md">
-                <IconSearch size={64} className={styles.emptyIcon} />
-                <Title order={2} size="h3">
-                  Start searching for movies
-                </Title>
-                <Text c="dimmed" size="lg" ta="center">
-                  Enter a movie title, keyword, or phrase to begin
-                </Text>
-              </Stack>
-            </div>
-          )}
-
-          {/* 錯誤狀態 */}
-          {error && (
-            <Alert
-              icon={<IconAlertCircle size={24} />}
-              title="Search failed"
-              color="red"
-              variant="filled"
-            >
-              {error.message}
-            </Alert>
-          )}
-
-          {/* 空搜尋結果 */}
-          {showEmptyState && (
-            <div className={styles.centerContent}>
-              <Stack align="center" gap="md">
-                <IconMoodSad size={64} className={styles.emptyIcon} />
-                <Title order={2} size="h3">
-                  No results found
-                </Title>
-                <Text c="dimmed" size="lg" ta="center">
-                  Try searching with different keywords or check your spelling
-                </Text>
-              </Stack>
-            </div>
-          )}
-
-          {/* 搜尋結果列表 */}
-          {sortedMovies.length > 0 && (
-            <SimpleGrid
-              cols={{ base: 2, xs: 2, sm: 3, md: 4, lg: 5, xl: 6 }}
-              spacing={{ base: 'xs', sm: 'sm', md: 'md' }}
-              verticalSpacing={{ base: 'sm', sm: 'md', md: 'lg' }}
-            >
-              {sortedMovies.map((movie) => (
-                <MovieCard
-                  key={movie.id}
-                  movie={movie}
-                  onClick={() => handleMovieClick(movie)}
-                />
-              ))}
-            </SimpleGrid>
-          )}
-
-          {/* 載入指示器 - 初次搜尋 */}
-          {loading && movies.length === 0 && (
-            <div className={styles.centerContent}>
-              <Loader size="xl" />
-            </div>
-          )}
-
-          {/* 無限滾動哨兵和載入指示器 */}
-          {hasMore && movies.length > 0 && (
-            <div ref={sentinelRef} className={styles.loadingMore}>
-              {loading && (
-                <Group justify="center" p="xl">
-                  <Loader size="md" />
-                  <Text c="dimmed">Loading more results...</Text>
-                </Group>
-              )}
-            </div>
-          )}
-
-          {/* 已載入所有結果的提示 */}
-          {!hasMore && movies.length > 0 && !loading && (
-            <Text c="dimmed" ta="center" py="xl">
-              You've reached the end of the results
-            </Text>
+              {/* 排序選項 */}
+              <Select
+                value={sortBy}
+                onChange={(value) => setSortBy(value as SortOption)}
+                data={[
+                  { value: 'popularity', label: 'Most Popular' },
+                  { value: 'rating', label: 'Highest Rated' },
+                  { value: 'date', label: 'Release Date' },
+                  { value: 'title', label: 'Title (A-Z)' },
+                ]}
+                size="sm"
+                w={{ base: '100%', xs: 200 }}
+                label="Sort by"
+              />
+            </Group>
           )}
         </Stack>
-      </Container>
 
-      {/* 電影詳細資訊 Modal */}
-      <MovieDetailModal
-        movie={selectedMovie}
-        opened={selectedMovie !== null}
-        onClose={handleCloseModal}
-        onViewDetail={handleViewDetail}
-      />
-    </>
+        {/* 初始狀態:提示使用者開始搜尋 */}
+        {showInitialState && (
+          <div className={styles.centerContent}>
+            <Stack align="center" gap="md">
+              <IconSearch size={64} className={styles.emptyIcon} />
+              <Title order={2} size="h3">
+                Start searching for movies
+              </Title>
+              <Text c="dimmed" size="lg" ta="center">
+                Enter a movie title, keyword, or phrase to begin
+              </Text>
+            </Stack>
+          </div>
+        )}
+
+        {/* 錯誤狀態 */}
+        {error && (
+          <Alert
+            icon={<IconAlertCircle size={24} />}
+            title="Search failed"
+            color="red"
+            variant="filled"
+          >
+            {error.message}
+          </Alert>
+        )}
+
+        {/* 空搜尋結果 */}
+        {showEmptyState && (
+          <div className={styles.centerContent}>
+            <Stack align="center" gap="md">
+              <IconMoodSad size={64} className={styles.emptyIcon} />
+              <Title order={2} size="h3">
+                No results found
+              </Title>
+              <Text c="dimmed" size="lg" ta="center">
+                Try searching with different keywords or check your spelling
+              </Text>
+            </Stack>
+          </div>
+        )}
+
+        {/* 
+          搜尋結果列表
+        */}
+        {sortedMovies.length > 0 && (
+          <Stack gap="md">
+            {sortedMovies.map((movie) => (
+              <MovieListItem key={movie.id} movie={movie} />
+            ))}
+          </Stack>
+        )}
+
+        {/* 載入指示器 - 初次搜尋 */}
+        {loading && movies.length === 0 && (
+          <div className={styles.centerContent}>
+            <Loader size="xl" />
+          </div>
+        )}
+
+        {/* 無限滾動哨兵和載入指示器 */}
+        {hasMore && movies.length > 0 && (
+          <div ref={sentinelRef} className={styles.loadingMore}>
+            {loading && (
+              <Group justify="center" p="xl">
+                <Loader size="md" />
+                <Text c="dimmed">Loading more results...</Text>
+              </Group>
+            )}
+          </div>
+        )}
+
+        {/* 已載入所有結果的提示 */}
+        {!hasMore && movies.length > 0 && !loading && (
+          <Text c="dimmed" ta="center" py="xl">
+            You've reached the end of the results
+          </Text>
+        )}
+      </Stack>
+    </Container>
   );
 }

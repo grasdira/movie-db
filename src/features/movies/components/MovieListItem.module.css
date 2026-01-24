@@ -1,0 +1,125 @@
+/* MovieListItem 的樣式定義 */
+
+/**
+ * 容器樣式
+ * 
+ * 使用 Paper 元件作為基礎,提供卡片效果
+ * padding 和 hover 效果讓整個項目更有互動性
+ */
+.container {
+  padding: 16px;
+  transition: all 0.2s ease;
+}
+
+.container:hover {
+  box-shadow: light-dark(
+    0 4px 12px rgba(0, 0, 0, 0.1),
+    0 4px 12px rgba(0, 0, 0, 0.3)
+  );
+  transform: translateY(-2px);
+}
+
+/**
+ * 海報容器
+ * 
+ * 固定寬度,確保所有列表項的佈局一致
+ * 在不同螢幕尺寸下調整寬度
+ */
+.posterWrapper {
+  /* 桌面版:較大的海報 */
+  width: 120px;
+  flex-shrink: 0;
+}
+
+/**
+ * 海報圖片
+ * 
+ * 保持電影海報的標準比例(2:3)
+ * 使用 object-fit: cover 確保圖片不會變形
+ */
+.poster {
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+/**
+ * 內容區域
+ * 
+ * 使用 flex: 1 讓它佔據剩餘空間
+ * min-width: 0 確保文字截斷能正常工作
+ */
+.content {
+  flex: 1;
+  min-width: 0;
+  /* 確保內容區域填滿整個高度 */
+  align-self: stretch;
+}
+
+/**
+ * 標題樣式
+ * 
+ * 確保標題不會過長而破壞佈局
+ * 使用 word-break 處理長單字
+ */
+.title {
+  word-break: break-word;
+  line-height: 1.3;
+}
+
+/**
+ * 簡介文字
+ * 
+ * lineClamp 由 Mantine 的 Text 元件處理
+ * 這裡只設定最小高度,確保佈局一致
+ */
+.overview {
+  line-height: 1.5;
+  /* 三行文字的大概高度 */
+  min-height: 4.5em;
+}
+
+/**
+ * 響應式設計 - 平板
+ */
+@media (max-width: 768px) {
+  .posterWrapper {
+    /* 平板:稍微縮小海報 */
+    width: 100px;
+  }
+
+  .container {
+    padding: 12px;
+  }
+
+  .overview {
+    /* 平板上可能顯示兩行就好 */
+    min-height: 3em;
+  }
+}
+
+/**
+ * 響應式設計 - 手機
+ */
+@media (max-width: 576px) {
+  .posterWrapper {
+    /* 手機:更小的海報 */
+    width: 80px;
+  }
+
+  .container {
+    padding: 10px;
+  }
+
+  .title {
+    /* 手機上使用較小的字體 */
+    font-size: 0.95rem;
+  }
+
+  .overview {
+    /* 手機上簡介可能只顯示兩行 */
+    min-height: 3em;
+    font-size: 0.85rem;
+  }
+}
