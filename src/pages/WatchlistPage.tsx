@@ -10,7 +10,7 @@ import {
   Group,
 } from '@mantine/core';
 import { IconAlertCircle, IconBookmarkOff } from '@tabler/icons-react';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router';
 import {
   useWatchlistItems,
@@ -33,6 +33,11 @@ import styles from './WatchlistPage.module.css';
  * - useWatchlistItems: 取得所有 watchlist 項目
  * - useWatchlistCount: 取得項目數量
  * - useWatchlistActions: 取得操作方法
+ *
+ * 效能優化:
+ * - 使用 useMemo 來避免不必要的重新載入
+ * - 只在初次載入時顯示 loading 狀態,避免閃動
+ * - 背景更新資料,保持 UI 的流暢性
  */
 export function WatchlistPage() {
   const navigate = useNavigate();
@@ -46,24 +51,36 @@ export function WatchlistPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
   const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null);
+  const movieIds = useMemo(() => items.map((item) => item.movieId), [items]);
 
   /**
    * 載入 watchlist 中的電影資訊
    */
   useEffect(() => {
     async function loadWatchlistMovies() {
-      if (items.length === 0) {
+      if (movieIds.length === 0) {
+        setMovies([]);
         setLoading(false);
         return;
       }
 
-      setLoading(true);
+      /**
+       * 條件性的 loading 狀態
+       *
+       * 只有在真正的初次載入時(movies 陣列為空)才顯示 loading。
+       * 如果已經有資料,就在背景更新,不顯示 loading。
+       */
+      const isInitialLoad = movies.length === 0;
+      if (isInitialLoad) {
+        setLoading(true);
+      }
+
       setError(null);
 
       try {
         // 為每個 movieId 載入詳細資訊
-        const moviePromises = items.map((item) =>
-          MovieRepository.getMovieDetail(item.movieId)
+        const moviePromises = movieIds.map((movieId) =>
+          MovieRepository.getMovieDetail(movieId)
         );
 
         const loadedMovies = await Promise.all(moviePromises);
@@ -93,7 +110,7 @@ export function WatchlistPage() {
     }
 
     loadWatchlistMovies();
-  }, [items]);
+  }, [movieIds]);
 
   /**
    * 處理電影卡片點擊
