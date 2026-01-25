@@ -121,6 +121,27 @@
   color: light-dark(var(--mantine-color-gray-8), var(--mantine-color-gray-3));
 }
 
+/**
+ * Watchlist 按鈕樣式
+ * 
+ * 使用 Button 元件的 Watchlist 按鈕有清楚的文字標籤
+ * 讓功能更容易被發現和理解
+ */
+.watchlistButton {
+  /* 添加輕微的動畫效果,提升互動體驗 */
+  transition: transform 0.2s ease;
+}
+
+.watchlistButton:hover {
+  /* hover 時輕微放大,提供視覺反饋 */
+  transform: scale(1.05);
+}
+
+.watchlistButton:active {
+  /* 點擊時縮小,模擬按鈕被按下的感覺 */
+  transform: scale(0.98);
+}
+
 /* 平板版本 (768px 以上) */
 @media (min-width: 768px) {
   .hero {

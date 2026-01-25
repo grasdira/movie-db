@@ -1,5 +1,24 @@
-import { Container, Title, Text, Group, Badge, Stack } from '@mantine/core';
-import { IconStarFilled, IconClock } from '@tabler/icons-react';
+import {
+  Container,
+  Title,
+  Text,
+  Group,
+  Badge,
+  Stack,
+  Button,
+  Tooltip,
+} from '@mantine/core';
+import {
+  IconStarFilled,
+  IconClock,
+  IconBookmark,
+  IconBookmarkFilled,
+} from '@tabler/icons-react';
+import { notifications } from '@mantine/notifications';
+import {
+  useIsInWatchlist,
+  useWatchlistActions,
+} from '@/features/watchlist/store';
 import type { MovieDetail } from '@/features/movies/types/movie';
 import styles from './MovieHero.module.css';
 
@@ -17,8 +36,13 @@ interface MovieHeroProps {
  * - 標題和基本資訊(評分、上映年份、片長)
  * - 類型標籤
  * - 宣傳標語
+ * - Watchlist 按鈕
  */
 export function MovieHero({ movie }: MovieHeroProps) {
+  // Watchlist 狀態和操作
+  const isInWatchlist = useIsInWatchlist(movie.id);
+  const { toggleWatchlist } = useWatchlistActions();
+
   const releaseYear = movie.releaseDate.split('-')[0];
   const formattedRating = movie.rating.toFixed(1);
 
@@ -31,6 +55,28 @@ export function MovieHero({ movie }: MovieHeroProps) {
   };
 
   const runtime = formatRuntime(movie.runtime);
+
+  /**
+   * 處理 Watchlist 按鈕點擊
+   */
+  const handleToggleWatchlist = () => {
+    const added = toggleWatchlist(movie.id);
+
+    if (added) {
+      notifications.show({
+        title: 'Added to Watchlist',
+        message: `${movie.title} has been added to your watchlist`,
+        color: 'blue',
+        icon: <IconBookmarkFilled size={18} />,
+      });
+    } else {
+      notifications.show({
+        title: 'Removed from Watchlist',
+        message: `${movie.title} has been removed from your watchlist`,
+        color: 'gray',
+      });
+    }
+  };
 
   return (
     <div className={styles.hero}>
@@ -71,8 +117,8 @@ export function MovieHero({ movie }: MovieHeroProps) {
               )}
             </div>
 
-            {/* 評分和基本資訊 */}
-            <Group gap="md">
+            {/* 評分、基本資訊和 Watchlist 按鈕 */}
+            <Group gap="md" wrap="wrap">
               <Badge
                 leftSection={<IconStarFilled size={14} />}
                 size="lg"
@@ -94,6 +140,32 @@ export function MovieHero({ movie }: MovieHeroProps) {
                   <Text size="md">{runtime}</Text>
                 </Group>
               )}
+
+              {/* Watchlist 按鈕 */}
+              <Tooltip
+                label={
+                  isInWatchlist
+                    ? 'Remove from your watchlist'
+                    : 'Add to your watchlist'
+                }
+              >
+                <Button
+                  leftSection={
+                    isInWatchlist ? (
+                      <IconBookmarkFilled size={18} />
+                    ) : (
+                      <IconBookmark size={18} />
+                    )
+                  }
+                  variant={isInWatchlist ? 'filled' : 'outline'}
+                  color="blue"
+                  size="md"
+                  onClick={handleToggleWatchlist}
+                  className={styles.watchlistButton}
+                >
+                  {isInWatchlist ? 'In Watchlist' : 'Add to Watchlist'}
+                </Button>
+              </Tooltip>
             </Group>
 
             {/* 類型標籤 */}
