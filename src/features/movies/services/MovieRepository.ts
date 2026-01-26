@@ -1,6 +1,5 @@
 import { tmdbClient } from '@/lib/api/tmdbClient';
 import { MovieAdapter } from '@/lib/adapters/MovieAdapter';
-import { MovieDetailAdapter } from '@/lib/adapters/MovieDetailAdapter';
 import type {
   TMDBMovieListResponse,
   TMDBMovieDetailFull,
@@ -36,7 +35,7 @@ export class MovieRepository {
    */
   static async getMovieDetail(movieId: number): Promise<MovieDetail> {
     const response = await tmdbClient.getMovieDetail(movieId);
-    return MovieDetailAdapter.toMovieDetail(response as TMDBMovieDetailFull);
+    return MovieAdapter.toMovieDetail(response as TMDBMovieDetailFull);
   }
 
   /**
