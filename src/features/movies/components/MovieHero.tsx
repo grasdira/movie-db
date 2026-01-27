@@ -92,7 +92,7 @@ export function MovieHero({ movie }: MovieHeroProps) {
       </div>
 
       {/* 內容 */}
-      <Container size="xl" className={styles.content}>
+      <Container size="lg" className={styles.content}>
         <div className={styles.heroContent}>
           {/* 海報 */}
           <div className={styles.posterWrapper}>

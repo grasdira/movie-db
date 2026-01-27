@@ -26,7 +26,8 @@ export function CastSection({ cast }: CastSectionProps) {
               <Avatar
                 src={member.profileUrl}
                 alt={member.name}
-                size={100}
+                size={150}
+                variant="transparent"
                 radius="md"
                 className={styles.avatar}
               />

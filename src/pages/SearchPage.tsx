@@ -77,6 +77,7 @@ export function SearchPage() {
    */
   const { ref: sentinelRef, entry } = useIntersection({
     threshold: 0.1, // 當元素 10% 進入視窗時觸發
+    rootMargin: '500px',
   });
 
   /**

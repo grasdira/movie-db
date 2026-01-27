@@ -10,7 +10,7 @@ import {
   Center,
   Loader,
 } from '@mantine/core';
-import { IconStarFilled, IconChevronDown } from '@tabler/icons-react';
+import { IconStarFilled } from '@tabler/icons-react';
 import type { Review } from '@/features/movies/types/movie';
 import styles from './ReviewsSection.module.css';
 
@@ -105,7 +105,6 @@ export function ReviewsSection({
           <Center mt="md">
             <Button
               variant="light"
-              rightSection={<IconChevronDown size={16} />}
               onClick={onLoadMore}
               loading={loading}
               disabled={loading}

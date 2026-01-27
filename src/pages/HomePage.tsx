@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Container, Title, Stack } from '@mantine/core';
+import { Container, Stack } from '@mantine/core';
 import { useNavigate } from 'react-router';
 import { MovieSection } from '@/features/movies/components/MovieSection';
 import { MovieDetailModal } from '@/features/movies/components/MovieDetailModal';
@@ -47,11 +47,8 @@ export function HomePage() {
 
   return (
     <>
-      <Container size="xl" py="xl">
+      <Container size="lg" py="xl">
         <Stack gap="xl">
-          {/* 頁面標題 */}
-          <Title order={1}>Movie Database</Title>
-
           {/* 熱門電影區塊 */}
           <MovieSection
             category="popular"

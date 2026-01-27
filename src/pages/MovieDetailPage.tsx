@@ -89,8 +89,8 @@ export function MovieDetailPage() {
       <MovieHero movie={movie} />
 
       {/* 主要內容區域 */}
-      <Container size="xl" py="xl">
-        <Stack gap="xl">
+      <Container size="lg" py="xl">
+        <Stack gap="xl" px={{ base: 'md', sm: 'xl' }}>
           {/* 詳細資訊 */}
           <MovieInfo movie={movie} />
 

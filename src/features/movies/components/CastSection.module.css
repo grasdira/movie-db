@@ -25,7 +25,9 @@
 }
 
 .avatar {
-  /* Light mode: 淺色邊框 / Dark mode: 深色邊框 */
-  border: 2px solid
-    light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-5));
+  border: 0px;
+}
+
+.avatar img {
+  object-fit: contain;
 }

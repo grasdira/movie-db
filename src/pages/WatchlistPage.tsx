@@ -274,7 +274,7 @@ export function WatchlistPage() {
   // 顯示電影列表
   return (
     <>
-      <Container size="xl" py="xl">
+      <Container size="lg" py="xl">
         <Stack gap="xl">
           {/* 頁面標題和控制項 */}
           <Group justify="space-between" align="flex-start">
@@ -319,8 +319,10 @@ export function WatchlistPage() {
 
           {/* 電影列表 */}
           <SimpleGrid
-            cols={{ base: 2, sm: 3, md: 4, lg: 5, xl: 6 }}
+            type="container"
+            cols={{ base: 1, '400px': 2, '600px': 3, '800px': 4, '1000px': 5 }}
             spacing="md"
+            className={styles.grid}
           >
             {sortedMovies.map((movie) => (
               <MovieCard

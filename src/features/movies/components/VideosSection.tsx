@@ -19,7 +19,7 @@ export function VideosSection({ videos }: VideosSectionProps) {
         Videos & Trailers
       </Title>
 
-      <SimpleGrid cols={{ base: 1, sm: 2, lg: 3 }} spacing="md">
+      <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="md">
         {videos.map((video) => (
           <div key={video.id} className={styles.videoCard}>
             <AspectRatio ratio={16 / 9} className={styles.videoWrapper}>

@@ -97,7 +97,7 @@ export function MovieListItem({ movie }: MovieListItemProps) {
 
   return (
     <Paper shadow="sm" radius="md" withBorder className={styles.container}>
-      <Group wrap="nowrap" align="flex-start" gap="md">
+      <Group wrap="nowrap" align="center" gap="md">
         {/* 海報圖片 */}
         <div className={styles.posterWrapper}>
           <Image
