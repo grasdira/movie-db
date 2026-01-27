@@ -1,26 +1,12 @@
-import {
-  Container,
-  TextInput,
-  Loader,
-  Alert,
-  Stack,
-  Text,
-  Select,
-  Group,
-  ActionIcon,
-  Title,
-} from '@mantine/core';
-import {
-  IconSearch,
-  IconX,
-  IconAlertCircle,
-  IconMoodSad,
-} from '@tabler/icons-react';
+import { Container, Stack, Text, Select, Group, Title } from '@mantine/core';
+import { IconSearch } from '@tabler/icons-react';
 import { useState, useMemo, useEffect } from 'react';
 import { useIntersection } from '@mantine/hooks';
 import { useSearchParams } from 'react-router';
 import { useMovieSearch } from '@/features/movies/hooks/useMovieSearch';
-import { MovieListItem } from '@/features/movies/components/MovieListItem';
+import { SearchBar } from '@/features/movies/components/SearchBar';
+import { SearchResult } from '@/features/movies/components/SearchResult';
+import { LoadingState, EmptyState } from '@/components';
 import styles from './SearchPage.module.css';
 
 /**
@@ -36,6 +22,12 @@ type SortOption = 'popularity' | 'rating' | 'date' | 'title';
 
 /**
  * SearchPage 元件
+ *
+ * 電影搜尋頁面，包含：
+ * - 搜尋輸入框
+ * - 搜尋結果顯示（包含各種狀態）
+ * - 排序功能
+ * - 無限滾動載入更多
  */
 export function SearchPage() {
   // 從 URL 讀取搜尋參數
@@ -158,23 +150,18 @@ export function SearchPage() {
   };
 
   /**
-   * 判斷是否應該顯示空狀態
-   *
-   * 空狀態的情況:
-   * 1. 有搜尋字串
-   * 2. 沒有載入中
-   * 3. 沒有錯誤
-   * 4. 沒有結果
+   * 重試搜尋
    */
-  const showEmptyState =
-    query.trim() !== '' && !loading && !error && movies.length === 0;
+  const handleRetry = () => {
+    if (query) {
+      setQuery(query);
+    }
+  };
 
   /**
-   * 判斷是否應該顯示初始狀態
-   *
-   * 初始狀態:使用者還沒有輸入任何搜尋字串
+   * 初始狀態：使用者還沒有輸入任何搜尋字串
    */
-  const showInitialState = query.trim() === '' && !loading;
+  const showInitialState = !query && !loading;
 
   return (
     <Container size="lg" py={{ base: 'md', sm: 'xl' }}>
@@ -186,23 +173,10 @@ export function SearchPage() {
           </Title>
 
           {/* 搜尋輸入框 */}
-          <TextInput
-            placeholder="Search for movies..."
-            size="lg"
-            leftSection={<IconSearch size={20} />}
-            rightSection={
-              query && (
-                <ActionIcon
-                  variant="subtle"
-                  onClick={handleClearSearch}
-                  aria-label="Clear search"
-                >
-                  <IconX size={20} />
-                </ActionIcon>
-              )
-            }
+          <SearchBar
             value={query}
-            onChange={(e) => handleSearch(e.target.value)}
+            onChange={handleSearch}
+            onClear={handleClearSearch}
           />
 
           {/* 搜尋結果資訊和排序選項 */}
@@ -232,72 +206,31 @@ export function SearchPage() {
           )}
         </Stack>
 
-        {/* 初始狀態:提示使用者開始搜尋 */}
+        {/* 初始狀態：提示使用者開始搜尋 */}
         {showInitialState && (
-          <div className={styles.centerContent}>
-            <Stack align="center" gap="md">
-              <IconSearch size={64} className={styles.emptyIcon} />
-              <Title order={2} size="h3">
-                Start searching for movies
-              </Title>
-              <Text c="dimmed" size="lg" ta="center">
-                Enter a movie title, keyword, or phrase to begin
-              </Text>
-            </Stack>
-          </div>
+          <EmptyState
+            icon={<IconSearch size={48} />}
+            title="Start searching for movies"
+            message="Enter a movie title, keyword, or phrase to begin"
+          />
         )}
 
-        {/* 錯誤狀態 */}
-        {error && (
-          <Alert
-            icon={<IconAlertCircle size={24} />}
-            title="Search failed"
-            color="red"
-            variant="filled"
-          >
-            {error.message}
-          </Alert>
-        )}
-
-        {/* 空搜尋結果 */}
-        {showEmptyState && (
-          <div className={styles.centerContent}>
-            <Stack align="center" gap="md">
-              <IconMoodSad size={64} className={styles.emptyIcon} />
-              <Title order={2} size="h3">
-                No results found
-              </Title>
-              <Text c="dimmed" size="lg" ta="center">
-                Try searching with different keywords or check your spelling
-              </Text>
-            </Stack>
-          </div>
-        )}
-
-        {/* 搜尋結果列表 */}
-        {sortedMovies.length > 0 && (
-          <Stack gap="md">
-            {sortedMovies.map((movie) => (
-              <MovieListItem key={movie.id} movie={movie} />
-            ))}
-          </Stack>
-        )}
-
-        {/* 載入指示器 - 初次搜尋 */}
-        {loading && movies.length === 0 && (
-          <div className={styles.centerContent}>
-            <Loader size="xl" />
-          </div>
+        {/* 搜尋結果（包含所有狀態處理） */}
+        {query && (
+          <SearchResult
+            movies={sortedMovies}
+            isLoading={loading}
+            error={error}
+            query={query}
+            onRetry={handleRetry}
+          />
         )}
 
         {/* 無限滾動哨兵和載入指示器 */}
         {hasMore && movies.length > 0 && (
           <div ref={sentinelRef} className={styles.loadingMore}>
             {loading && (
-              <Group justify="center" p="xl">
-                <Loader size="md" />
-                <Text c="dimmed">Loading more results...</Text>
-              </Group>
+              <LoadingState message="Loading more results..." minHeight={100} />
             )}
           </div>
         )}
