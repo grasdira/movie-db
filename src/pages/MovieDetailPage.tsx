@@ -1,6 +1,5 @@
 import { useParams } from 'react-router';
-import { Container, Loader, Alert, Stack } from '@mantine/core';
-import { IconAlertCircle } from '@tabler/icons-react';
+import { Container, Stack } from '@mantine/core';
 import { useMovieDetail } from '@/features/movies/hooks/useMovieDetail';
 import { useMovieReviews } from '@/features/movies/hooks/useMovieReviews';
 import { MovieHero } from '@/features/movies/components/MovieHero';
@@ -8,6 +7,7 @@ import { MovieInfo } from '@/features/movies/components/MovieInfo';
 import { CastSection } from '@/features/movies/components/CastSection';
 import { VideosSection } from '@/features/movies/components/VideosSection';
 import { ReviewsSection } from '@/features/movies/components/ReviewsSection';
+import { LoadingState, ErrorState } from '@/components';
 import styles from './MovieDetailPage.module.css';
 
 /**
@@ -44,25 +44,14 @@ export function MovieDetailPage() {
 
   // 載入狀態
   if (loading) {
-    return (
-      <div className={styles.centerContent}>
-        <Loader size="xl" />
-      </div>
-    );
+    return <LoadingState message="Loading movie details..." />;
   }
 
   // 錯誤狀態
   if (error) {
     return (
       <Container size="lg" py="xl">
-        <Alert
-          icon={<IconAlertCircle size={24} />}
-          title="Failed to load movie"
-          color="red"
-          variant="filled"
-        >
-          {error.message}
-        </Alert>
+        <ErrorState title="Failed to load movie" message={error.message} />
       </Container>
     );
   }
@@ -71,14 +60,10 @@ export function MovieDetailPage() {
   if (!movie) {
     return (
       <Container size="lg" py="xl">
-        <Alert
-          icon={<IconAlertCircle size={24} />}
+        <ErrorState
           title="Movie not found"
-          color="yellow"
-          variant="filled"
-        >
-          The movie you're looking for doesn't exist or has been removed.
-        </Alert>
+          message="The movie you're looking for doesn't exist or has been removed."
+        />
       </Container>
     );
   }

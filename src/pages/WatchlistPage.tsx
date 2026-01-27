@@ -3,14 +3,12 @@ import {
   Title,
   Text,
   SimpleGrid,
-  Loader,
-  Alert,
   Stack,
   Button,
   Group,
   Select,
 } from '@mantine/core';
-import { IconAlertCircle, IconBookmarkOff } from '@tabler/icons-react';
+import { IconBookmarkOff } from '@tabler/icons-react';
 import { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router';
 import {
@@ -21,6 +19,7 @@ import {
 import { MovieRepository } from '@/features/movies/services/MovieRepository';
 import { MovieCard } from '@/features/movies/components/MovieCard';
 import { MovieDetailModal } from '@/features/movies/components/MovieDetailModal';
+import { LoadingState, ErrorState, EmptyState } from '@/components';
 import type { Movie } from '@/features/movies/types/movie';
 import styles from './WatchlistPage.module.css';
 
@@ -227,25 +226,18 @@ export function WatchlistPage() {
 
   // 載入狀態
   if (loading) {
-    return (
-      <div className={styles.centerContent}>
-        <Loader size="xl" />
-      </div>
-    );
+    return <LoadingState message="Loading your watchlist..." />;
   }
 
   // 錯誤狀態
   if (error) {
     return (
       <Container size="lg" py="xl">
-        <Alert
-          icon={<IconAlertCircle size={24} />}
+        <ErrorState
           title="Failed to load watchlist"
-          color="red"
-          variant="filled"
-        >
-          {error.message}
-        </Alert>
+          message={error.message}
+          onRetry={() => window.location.reload()}
+        />
       </Container>
     );
   }
@@ -254,19 +246,16 @@ export function WatchlistPage() {
   if (count === 0) {
     return (
       <Container size="lg" py="xl">
-        <div className={styles.emptyState}>
-          <IconBookmarkOff size={64} className={styles.emptyIcon} />
-          <Title order={2} mt="md">
-            Your watchlist is empty
-          </Title>
-          <Text c="dimmed" mt="sm" size="lg">
-            Start adding movies to your watchlist to keep track of what you want
-            to watch
-          </Text>
-          <Button size="lg" mt="xl" onClick={() => navigate('/')}>
-            Browse Movies
-          </Button>
-        </div>
+        <EmptyState
+          icon={<IconBookmarkOff size={48} />}
+          title="Your watchlist is empty"
+          message="Start adding movies to your watchlist to keep track of what you want to watch"
+          action={
+            <Button size="lg" onClick={() => navigate('/')}>
+              Browse Movies
+            </Button>
+          }
+        />
       </Container>
     );
   }

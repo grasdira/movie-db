@@ -1,7 +1,7 @@
-import { Title, Loader, Alert, Stack } from '@mantine/core';
-import { IconAlertCircle } from '@tabler/icons-react';
+import { Title, Stack } from '@mantine/core';
 import { useMovieList } from '@/features/movies/hooks/useMovieList';
 import { MovieGrid } from './MovieGrid';
+import { LoadingState, ErrorState, EmptyState } from '@/components';
 import type { MovieCategory, Movie } from '@/features/movies/types/movie';
 import styles from './MovieSection.module.css';
 
@@ -14,7 +14,7 @@ interface MovieSectionProps {
 /**
  * MovieSection 元件
  *
- * 顯示特定分類的電影區塊,包含標題和電影列表
+ * 顯示特定分類的電影區塊，包含標題和電影列表
  * 負責處理資料載入、錯誤顯示等狀態
  */
 export function MovieSection({
@@ -33,33 +33,33 @@ export function MovieSection({
 
       {/* 載入狀態 */}
       {loading && (
-        <div className={styles.centerContent}>
-          <Loader size="lg" />
-        </div>
+        <LoadingState
+          message={`Loading ${title.toLowerCase()}...`}
+          minHeight={200}
+        />
       )}
 
       {/* 錯誤狀態 */}
       {error && !loading && (
-        <Alert
-          icon={<IconAlertCircle size={16} />}
-          title="Failed to load"
-          color="red"
-          variant="light"
-        >
-          {error.message}
-        </Alert>
+        <ErrorState
+          title="Failed to load movies"
+          message={error.message}
+          minHeight={200}
+        />
+      )}
+
+      {/* 空狀態 */}
+      {!loading && !error && movies.length === 0 && (
+        <EmptyState
+          title="No movies available"
+          message={`No ${title.toLowerCase()} movies found at the moment.`}
+          minHeight={200}
+        />
       )}
 
       {/* 電影列表 */}
       {!loading && !error && movies.length > 0 && (
         <MovieGrid movies={movies} onMovieClick={onMovieClick} />
-      )}
-
-      {/* 空狀態 */}
-      {!loading && !error && movies.length === 0 && (
-        <div className={styles.centerContent}>
-          <p>No movies available</p>
-        </div>
       )}
     </Stack>
   );
