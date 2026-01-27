@@ -11,6 +11,7 @@ import type {
   Crew,
   Video,
   Review,
+  ReviewList,
   Genre,
 } from '@/features/movies/types/movie';
 
@@ -18,7 +19,6 @@ const TMDB_IMAGE_BASE_URL = import.meta.env.VITE_TMDB_IMAGE_BASE_URL;
 
 /**
  * MovieAdapter 負責將 TMDB API 的資料格式轉換成應用程式內部使用的格式
- * 同時處理可能的資料異常情況
  */
 export class MovieAdapter {
   /**
@@ -31,6 +31,18 @@ export class MovieAdapter {
   ): string | null {
     if (!path) return null;
     return `${TMDB_IMAGE_BASE_URL}/${size}${path}`;
+  }
+
+  /**
+   * 建立空的評論列表
+   */
+  static createEmptyReviewList(): ReviewList {
+    return {
+      page: 1,
+      reviews: [],
+      totalPages: 1,
+      totalResults: 0,
+    };
   }
 
   /**
@@ -188,6 +200,18 @@ export class MovieAdapter {
   }
 
   /**
+   * 轉換評論列表
+   */
+  static toReviewList(reviewsData: TMDBMovieDetailFull['reviews']): ReviewList {
+    return {
+      page: reviewsData.page,
+      reviews: this.toReviews(reviewsData.results),
+      totalPages: reviewsData.total_pages,
+      totalResults: reviewsData.total_results,
+    };
+  }
+
+  /**
    * 將 TMDB 電影詳細資訊轉換為應用程式格式
    */
   static toMovieDetail(response: TMDBMovieDetailFull): MovieDetail {
@@ -202,7 +226,9 @@ export class MovieAdapter {
       cast: response.credits ? this.toCast(response.credits.cast) : [],
       crew: response.credits ? this.toCrew(response.credits.crew) : [],
       videos: response.videos ? this.toVideos(response.videos.results) : [],
-      reviews: response.reviews ? this.toReviews(response.reviews.results) : [],
+      reviews: response.reviews
+        ? this.toReviewList(response.reviews)
+        : this.createEmptyReviewList(),
     };
   }
 }

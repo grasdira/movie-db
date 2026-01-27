@@ -1,4 +1,8 @@
-import type { TMDBMovieListResponse, TMDBMovieDetailFull } from './types';
+import type {
+  TMDBMovieListResponse,
+  TMDBMovieDetailFull,
+  TMDBReviews,
+} from './types';
 
 const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
 const BASE_URL = import.meta.env.VITE_TMDB_BASE_URL;
@@ -148,5 +152,18 @@ export const tmdbClient = {
       page: String(page),
       language,
       include_adult: 'false',
+    }),
+
+  /**
+   * 獲取電影評論
+   *
+   * @param movieId - 電影 ID
+   * @param page - 頁碼
+   * @returns 評論資料
+   */
+  getMovieReviews: (movieId: number, page: number = 1) =>
+    fetchAPI<TMDBReviews>(`/movie/${movieId}/reviews`, {
+      page: String(page),
+      language,
     }),
 };

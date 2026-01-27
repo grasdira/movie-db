@@ -2,6 +2,7 @@ import { useParams } from 'react-router';
 import { Container, Loader, Alert, Stack } from '@mantine/core';
 import { IconAlertCircle } from '@tabler/icons-react';
 import { useMovieDetail } from '@/features/movies/hooks/useMovieDetail';
+import { useMovieReviews } from '@/features/movies/hooks/useMovieReviews';
 import { MovieHero } from '@/features/movies/components/MovieHero';
 import { MovieInfo } from '@/features/movies/components/MovieInfo';
 import { CastSection } from '@/features/movies/components/CastSection';
@@ -27,6 +28,19 @@ export function MovieDetailPage() {
   const { id } = useParams<{ id: string }>();
   const movieId = Number(id);
   const { movie, loading, error } = useMovieDetail(movieId);
+
+  // 管理評論的分頁載入
+  const {
+    reviews,
+    loading: reviewsLoading,
+    hasMore,
+    loadMore,
+  } = useMovieReviews(
+    movieId,
+    movie?.reviews.reviews ?? [],
+    movie?.reviews.page ?? 1,
+    movie?.reviews.totalPages ?? 1
+  );
 
   // 載入狀態
   if (loading) {
@@ -87,8 +101,13 @@ export function MovieDetailPage() {
           {movie.videos.length > 0 && <VideosSection videos={movie.videos} />}
 
           {/* 評論 */}
-          {movie.reviews.length > 0 && (
-            <ReviewsSection reviews={movie.reviews} />
+          {reviews.length > 0 && (
+            <ReviewsSection
+              reviews={reviews}
+              loading={reviewsLoading}
+              hasMore={hasMore}
+              onLoadMore={loadMore}
+            />
           )}
         </Stack>
       </Container>

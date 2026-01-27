@@ -1,19 +1,39 @@
-import { Title, Paper, Avatar, Text, Group, Badge, Stack } from '@mantine/core';
-import { IconStarFilled } from '@tabler/icons-react';
+import {
+  Title,
+  Paper,
+  Avatar,
+  Text,
+  Group,
+  Badge,
+  Stack,
+  Button,
+  Center,
+  Loader,
+} from '@mantine/core';
+import { IconStarFilled, IconChevronDown } from '@tabler/icons-react';
 import type { Review } from '@/features/movies/types/movie';
 import styles from './ReviewsSection.module.css';
 
 interface ReviewsSectionProps {
   reviews: Review[];
+  loading?: boolean;
+  hasMore?: boolean;
+  onLoadMore?: () => void;
 }
 
 /**
  * ReviewsSection 元件
  *
- * 顯示電影的評論
+ * 顯示電影的評論，支援分頁載入
  * 每則評論包含作者資訊、評分和內容
+ * 使用者可以透過「Load More」按鈕載入更多評論
  */
-export function ReviewsSection({ reviews }: ReviewsSectionProps) {
+export function ReviewsSection({
+  reviews,
+  loading = false,
+  hasMore = false,
+  onLoadMore,
+}: ReviewsSectionProps) {
   // 格式化日期
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
@@ -79,6 +99,37 @@ export function ReviewsSection({ reviews }: ReviewsSectionProps) {
             </Text>
           </Paper>
         ))}
+
+        {/* 載入更多按鈕 */}
+        {hasMore && onLoadMore && (
+          <Center mt="md">
+            <Button
+              variant="light"
+              rightSection={<IconChevronDown size={16} />}
+              onClick={onLoadMore}
+              loading={loading}
+              disabled={loading}
+            >
+              Load More Reviews
+            </Button>
+          </Center>
+        )}
+
+        {/* 載入中指示器 */}
+        {loading && (
+          <Center py="md">
+            <Loader size="sm" />
+          </Center>
+        )}
+
+        {/* 沒有更多評論的提示 */}
+        {!hasMore && reviews.length > 0 && !loading && (
+          <Center py="md">
+            <Text size="sm" c="dimmed">
+              No more reviews
+            </Text>
+          </Center>
+        )}
       </Stack>
     </div>
   );

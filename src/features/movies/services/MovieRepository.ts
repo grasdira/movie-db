@@ -3,9 +3,18 @@ import { MovieAdapter } from '@/lib/adapters/MovieAdapter';
 import type {
   TMDBMovieListResponse,
   TMDBMovieDetailFull,
+  TMDBReviews,
 } from '@/lib/api/types';
-import type { SearchResult, MovieDetail } from '@/features/movies/types/movie';
+import type {
+  SearchResult,
+  MovieDetail,
+  ReviewList,
+} from '@/features/movies/types/movie';
 
+/**
+ * MovieRepository 負責協調 API Client 和 Adapter
+ * 提供統一的資料存取介面
+ */
 export class MovieRepository {
   static async getPopular(page: number = 1): Promise<SearchResult> {
     const response = await tmdbClient.getPopular(page);
@@ -41,7 +50,7 @@ export class MovieRepository {
   /**
    * 搜尋電影
    *
-   * 根據關鍵字搜尋電影,支援分頁載入
+   * 根據關鍵字搜尋電影
    *
    * @param query - 搜尋關鍵字
    * @param page - 頁碼 (預設為 1)
@@ -64,5 +73,20 @@ export class MovieRepository {
 
     const response = await tmdbClient.searchMovies(query.trim(), page);
     return MovieAdapter.toSearchResult(response as TMDBMovieListResponse);
+  }
+
+  /**
+   * 獲取電影評論（包含分頁資訊）
+   *
+   * @param movieId - 電影 ID
+   * @param page - 頁碼（預設為 1）
+   * @returns 評論列表
+   */
+  static async getMovieReviews(
+    movieId: number,
+    page: number = 1
+  ): Promise<ReviewList> {
+    const response = await tmdbClient.getMovieReviews(movieId, page);
+    return MovieAdapter.toReviewList(response as TMDBReviews);
   }
 }

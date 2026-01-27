@@ -89,6 +89,16 @@ export interface Review {
 }
 
 /**
+ * 包含分頁資訊的評論資訊
+ */
+export interface ReviewList {
+  page: number;
+  reviews: Review[];
+  totalPages: number;
+  totalResults: number;
+}
+
+/**
  * 完整的電影詳細資訊
  * 包含基本資訊、演員陣容、影片和評論
  */
@@ -104,5 +114,5 @@ export interface MovieDetail extends Omit<Movie, 'genreIds'> {
   cast: Cast[];
   crew: Crew[];
   videos: Video[];
-  reviews: Review[];
+  reviews: ReviewList;
 }
