@@ -16,8 +16,9 @@ import {
   IconAlertCircle,
   IconMoodSad,
 } from '@tabler/icons-react';
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useIntersection } from '@mantine/hooks';
+import { useSearchParams } from 'react-router';
 import { useMovieSearch } from '@/features/movies/hooks/useMovieSearch';
 import { MovieListItem } from '@/features/movies/components/MovieListItem';
 import styles from './SearchPage.module.css';
@@ -37,6 +38,10 @@ type SortOption = 'popularity' | 'rating' | 'date' | 'title';
  * SearchPage 元件
  */
 export function SearchPage() {
+  // 從 URL 讀取搜尋參數
+  const [searchParams, setSearchParams] = useSearchParams();
+  const urlQuery = searchParams.get('q') || '';
+
   // 使用搜尋 hook
   const {
     movies,
@@ -51,6 +56,15 @@ export function SearchPage() {
 
   // 排序狀態
   const [sortBy, setSortBy] = useState<SortOption>('popularity');
+
+  /**
+   * 當 URL 的 query 改變時，更新 hook 的 query
+   */
+  useEffect(() => {
+    if (urlQuery && urlQuery !== query) {
+      setQuery(urlQuery);
+    }
+  }, [urlQuery]); // 只依賴 urlQuery，避免無限迴圈
 
   /**
    * 設定無限滾動的觀察目標
@@ -115,10 +129,19 @@ export function SearchPage() {
 
   /**
    * 處理搜尋輸入
+   * 同時更新 hook 的 query 和 URL 的 query parameter
    */
   const handleSearch = (value: string) => {
     setQuery(value);
-    // 當使用者開始新的搜尋時,重置排序為熱門程度
+
+    // 更新 URL
+    if (value.trim()) {
+      setSearchParams({ q: value.trim() });
+    } else {
+      setSearchParams({});
+    }
+
+    // 當使用者開始新的搜尋時，重置排序為熱門程度
     if (value.trim() !== query.trim()) {
       setSortBy('popularity');
     }
@@ -129,6 +152,7 @@ export function SearchPage() {
    */
   const handleClearSearch = () => {
     setQuery('');
+    setSearchParams({}); // 清除 URL 的 query parameter
     setSortBy('popularity');
   };
 
@@ -249,9 +273,7 @@ export function SearchPage() {
           </div>
         )}
 
-        {/* 
-          搜尋結果列表
-        */}
+        {/* 搜尋結果列表 */}
         {sortedMovies.length > 0 && (
           <Stack gap="md">
             {sortedMovies.map((movie) => (
