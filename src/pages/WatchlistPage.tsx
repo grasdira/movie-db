@@ -19,7 +19,12 @@ import {
 import { MovieRepository } from '@/features/movies/services/MovieRepository';
 import { MovieCard } from '@/features/movies/components/MovieCard';
 import { MovieDetailModal } from '@/features/movies/components/MovieDetailModal';
-import { LoadingState, ErrorState, EmptyState } from '@/components';
+import {
+  LoadingState,
+  ErrorState,
+  EmptyState,
+  ScrollToTop,
+} from '@/components';
 import type { Movie } from '@/features/movies/types/movie';
 import styles from './WatchlistPage.module.css';
 
@@ -323,6 +328,7 @@ export function WatchlistPage() {
           </SimpleGrid>
         </Stack>
       </Container>
+      <ScrollToTop />
 
       {/* 電影詳細資訊 Modal */}
       <MovieDetailModal

@@ -6,7 +6,7 @@ import { useMovieSearch } from '@/features/movies/hooks/useMovieSearch';
 import { useInfiniteScroll } from '@/hooks/useInfiniteScroll';
 import { SearchBar } from '@/features/movies/components/SearchBar';
 import { SearchResult } from '@/features/movies/components/SearchResult';
-import { LoadingState, EmptyState } from '@/components';
+import { LoadingState, EmptyState, ScrollToTop } from '@/components';
 import type { SortOption } from '@/features/movies/hooks/useMovieSearch';
 
 /**
@@ -214,6 +214,7 @@ export function SearchPage() {
             )}
         </Stack>
       </Container>
+      <ScrollToTop />
     </>
   );
 }
